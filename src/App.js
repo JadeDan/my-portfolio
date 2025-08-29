@@ -2,22 +2,34 @@ import React, { useState, useEffect } from 'react';
 import { Menu, X, Github, Linkedin, Mail, ExternalLink, ChevronDown, Code, Palette, Smartphone, MapPin, Phone, Award, Briefcase, GraduationCap, Star } from 'lucide-react';
 import Profile from "./picture/Profile.png";
 
-
-
 const Portfolio = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const [isScrolled, setIsScrolled] = useState(false);
   const [scrollY, setScrollY] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    // Check if device is mobile/tablet
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       setScrollY(currentScrollY);
       setIsScrolled(currentScrollY > 50);
     };
+    
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', checkMobile);
+    };
   }, []);
 
   const scrollToSection = (sectionId) => {
@@ -128,6 +140,18 @@ const Portfolio = () => {
       description: "Contributed to visual and functional design of digital experiences. Assisted in hardware troubleshooting and network setup."
     }
   ];
+
+  // Calculate parallax values - only for desktop
+  const getParallaxStyle = (direction = 1, intensity = 0.2) => {
+    if (isMobile) {
+      return { transform: 'none', opacity: 1 };
+    }
+    
+    return {
+      transform: `translateX(${Math.max(Math.min(scrollY * intensity * direction, 100), -100)}px)`,
+      opacity: Math.max(1 - scrollY * 0.0003, 0.7) // Much slower fade
+    };
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 overflow-x-hidden">
@@ -251,155 +275,147 @@ const Portfolio = () => {
             {/* Photo Section - Left Side */}
             <div 
               className="flex justify-center lg:justify-start order-1"
-              style={{
-                transform: `translateX(${Math.min(scrollY * -0.2, 0)}px)`,
-                opacity: Math.max(1 - scrollY * 0.0005, 0.5)
-              }}
+              style={getParallaxStyle(-1, 0.15)}
             >
               <div className="relative group">
-
-
-
-      {/* Professional decorative elements */}
-      <div className="absolute -top-4 -left-4 w-full h-full border-2 border-slate-300 rounded-2xl group-hover:translate-x-2 group-hover:translate-y-2 transition-transform duration-500" />
-        <div className="absolute -bottom-4 -right-4 w-full h-full bg-blue-700 opacity-10 rounded-2xl group-hover:-translate-x-1 group-hover:-translate-y-1 transition-transform duration-500" />
+                {/* Professional decorative elements */}
+                <div className="absolute -top-4 -left-4 w-full h-full border-2 border-slate-300 rounded-2xl group-hover:translate-x-2 group-hover:translate-y-2 transition-transform duration-500" />
+                <div className="absolute -bottom-4 -right-4 w-full h-full bg-blue-700 opacity-10 rounded-2xl group-hover:-translate-x-1 group-hover:-translate-y-1 transition-transform duration-500" />
   
-      {/* Main photo container */}
-      <div className="relative w-80 h-96 lg:w-96 lg:h-[480px] rounded-2xl overflow-hidden shadow-2xl group-hover:shadow-3xl transition-all duration-500 bg-white border border-gray-200">
-        <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-      {/* Graduation photo */}
-        <img
-         src={Profile}
-         alt="My Graduation Photo"
-         className="w-full h-full object-cover"
-        />
-      </div>
-    </div>
-  </div>
-</div>
+                {/* Main photo container */}
+                <div className="relative w-80 h-96 lg:w-96 lg:h-[480px] rounded-2xl overflow-hidden shadow-2xl group-hover:shadow-3xl transition-all duration-500 bg-white border border-gray-200">
+                  <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                    {/* Graduation photo */}
+                    <img
+                      src={Profile}
+                      alt="My Graduation Photo"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
 
             {/* Text Content - Right Side */}
             <div 
               className="order-2 text-center lg:text-left lg:pl-8"
-              style={{
-                transform: `translateX(${Math.max(scrollY * 0.2, 0)}px)`,
-                opacity: Math.max(1 - scrollY * 0.0005, 0.5)
-              }}
+              style={getParallaxStyle(1, 0.15)}
             >
               <div className="mb-8">
                 <div className="inline-block px-6 py-3 bg-blue-50 border border-blue-200 rounded-full text-blue-700 text-base font-medium mb-6">
                   👋 Hello, I'm
                 </div>
                 
-                <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 leading-tight">
+                <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-900 mb-6 leading-tight">
                   <span className="text-blue-700">
                     Jade Bantilo
                   </span>
                 </h1>
                 
-                <div className="text-2xl md:text-3xl text-slate-700 mb-3 font-semibold">
+                <div className="text-xl md:text-2xl lg:text-3xl text-slate-700 mb-3 font-semibold">
                   Bachelor of Science in Computer Science
                 </div>
-                <div className="text-xl md:text-2xl text-gray-600 mb-8">
+                <div className="text-lg md:text-xl lg:text-2xl text-gray-600 mb-8">
                   UI/UX Designer
                 </div>
                 
-                <p className="text-lg text-gray-600 mb-10 leading-relaxed max-w-2xl mx-auto lg:mx-0">
+                <p className="text-base md:text-lg text-gray-600 mb-10 leading-relaxed max-w-2xl mx-auto lg:mx-0">
                   Passionate about creating beautiful, functional digital experiences and solving real-world problems through technology. Dean's Lister with hands-on experience in mobile app development and user-centered design.
                 </p>
               </div>
               
               {/* Contact info */}
-              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-8 mb-10 text-gray-600">
+              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-6 md:gap-8 mb-10 text-gray-600">
                 <div className="flex items-center">
-                  <MapPin size={20} className="mr-3 text-blue-700" />
-                  <span className="text-lg">Taguig City</span>
+                  <MapPin size={18} className="mr-3 text-blue-700" />
+                  <span className="text-base md:text-lg">Taguig City</span>
                 </div>
                 <div className="flex items-center">
-                  <Phone size={20} className="mr-3 text-slate-700" />
-                  <span className="text-lg">09053012761</span>
+                  <Phone size={18} className="mr-3 text-slate-700" />
+                  <span className="text-base md:text-lg">09053012761</span>
                 </div>
               </div>
               
               {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start mb-10">
+              <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center lg:justify-start mb-8 md:mb-10">
                 <button
                   onClick={() => scrollToSection('projects')}
-                  className="px-10 py-5 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl font-medium text-lg"
+                  className="px-8 md:px-10 py-4 md:py-5 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl font-medium text-base md:text-lg"
                 >
                   View My Work
                 </button>
                 <button
                   onClick={() => scrollToSection('contact')}
-                  className="px-10 py-5 border-2 border-slate-300 text-slate-700 rounded-lg hover:border-slate-500 hover:text-slate-900 hover:bg-gray-50 transition-all duration-300 transform hover:scale-105 font-medium text-lg"
+                  className="px-8 md:px-10 py-4 md:py-5 border-2 border-slate-300 text-slate-700 rounded-lg hover:border-slate-500 hover:text-slate-900 hover:bg-gray-50 transition-all duration-300 transform hover:scale-105 font-medium text-base md:text-lg"
                 >
                   Get In Touch
                 </button>
               </div>
 
               {/* Professional badges */}
-              <div className="flex flex-wrap justify-center lg:justify-start gap-4">
-                <div className="flex items-center px-6 py-3 bg-white border border-emerald-200 rounded-lg shadow-sm">
-                  <Palette className="w-5 h-5 text-emerald-600 mr-3" />
-                  <span className="text-base font-medium text-gray-700">UI & UX Designer</span>
+              <div className="flex flex-wrap justify-center lg:justify-start gap-3 md:gap-4">
+                <div className="flex items-center px-4 md:px-6 py-2 md:py-3 bg-white border border-emerald-200 rounded-lg shadow-sm">
+                  <Palette className="w-4 h-4 md:w-5 md:h-5 text-emerald-600 mr-2 md:mr-3" />
+                  <span className="text-sm md:text-base font-medium text-gray-700">UI & UX Designer</span>
                 </div>
-                <div className="flex items-center px-6 py-3 bg-white border border-blue-200 rounded-lg shadow-sm">
-                  <Code className="w-5 h-5 text-blue-600 mr-3" />
-                  <span className="text-base font-medium text-gray-700">Frontend Developer</span>
+                <div className="flex items-center px-4 md:px-6 py-2 md:py-3 bg-white border border-blue-200 rounded-lg shadow-sm">
+                  <Code className="w-4 h-4 md:w-5 md:h-5 text-blue-600 mr-2 md:mr-3" />
+                  <span className="text-sm md:text-base font-medium text-gray-700">Frontend Developer</span>
                 </div>
               </div>
             </div>
           </div>
           
-          {/* Scroll indicator */}
-          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
+          {/* Scroll indicator - hide on mobile when scrolled */}
+          <div className={`absolute bottom-8 left-1/2 transform -translate-x-1/2 transition-opacity duration-500 ${isMobile && scrollY > 100 ? 'opacity-0' : 'opacity-100'}`}>
             <div className="animate-bounce">
-              <ChevronDown size={32} className="text-slate-400" />
+              <ChevronDown size={isMobile ? 24 : 32} className="text-slate-400" />
             </div>
           </div>
         </div>
       </section>
 
       {/* About Section */}
-      <section id="about" className="py-20 px-6 bg-white">
+      <section id="about" className="py-16 md:py-20 px-6 bg-white">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">About Me</h2>
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">About Me</h2>
             <div className="w-24 h-1 bg-blue-700 mx-auto" />
           </div>
           
-          <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
             <div>
-              <h3 className="text-2xl font-semibold text-gray-900 mb-6">Crafting Digital Solutions</h3>
+              <h3 className="text-xl md:text-2xl font-semibold text-gray-900 mb-6">Crafting Digital Solutions</h3>
               <p className="text-gray-600 mb-6 leading-relaxed">
-                I’m Jade Daniele M. Bantilo, a fresh graduate from the University of Makati with a Bachelor of Science in Computer Science, specializing in Application Development. My academic journey has provided me with a solid foundation in programming, problem-solving, and building software solutions tailored to real-world needs.              </p>
-              <p className="text-gray-600 mb-8 leading-relaxed">
-                Throughout my studies, I’ve worked on meaningful projects such as Real Life BGC’s scholarship application platform and BullyProof, a mobile application designed to report cyberbullying incidents. These experiences allowed me to apply my technical knowledge in both web and mobile development while also strengthening my teamwork, research, and design skills.
+                I'm Jade Daniele M. Bantilo, a fresh graduate from the University of Makati with a Bachelor of Science in Computer Science, specializing in Application Development. My academic journey has provided me with a solid foundation in programming, problem-solving, and building software solutions tailored to real-world needs.
               </p>
-              <p className="text-gray-600 mb-8 leading-relaxed">
+              <p className="text-gray-600 mb-6 md:mb-8 leading-relaxed">
+                Throughout my studies, I've worked on meaningful projects such as Real Life BGC's scholarship application platform and BullyProof, a mobile application designed to report cyberbullying incidents. These experiences allowed me to apply my technical knowledge in both web and mobile development while also strengthening my teamwork, research, and design skills.
+              </p>
+              <p className="text-gray-600 mb-6 md:mb-8 leading-relaxed">
                 I am particularly passionate about front-end development and the challenge of creating applications that are not only functional but also engaging and user-friendly. As I continue my professional journey, I am eager to learn from real-world experiences, collaborate with innovative teams, and grow into a well-rounded software developer.
               </p>
             </div>
             
             <div>
-              <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-200">
-                <h3 className="text-xl font-semibold text-gray-900 mb-6">Skills & Technologies</h3>
+              <div className="bg-white rounded-xl shadow-lg p-6 md:p-8 border border-gray-200">
+                <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-6">Skills & Technologies</h3>
                 {skills.map((skill, index) => (
                   <div key={index} className="mb-6">
                     <div className="flex items-center mb-3">
                       {skill.icon}
-                      <h4 className="font-medium text-gray-700 ml-2">{skill.category}</h4>
+                      <h4 className="font-medium text-gray-700 ml-2 text-sm md:text-base">{skill.category}</h4>
                     </div>
-                    <div className="flex flex-wrap gap-3">
+                    <div className="flex flex-wrap gap-2 md:gap-3">
                       {skill.items.map((item, itemIndex) => (
                         <div
                           key={itemIndex}
-                          className="flex items-center px-4 py-3 bg-gray-50 border border-gray-200 text-gray-700 rounded-lg text-sm hover:shadow-md hover:border-gray-300 transition-all duration-300 group transform hover:scale-105 hover:bg-white"
+                          className="flex items-center px-3 md:px-4 py-2 md:py-3 bg-gray-50 border border-gray-200 text-gray-700 rounded-lg text-xs md:text-sm hover:shadow-md hover:border-gray-300 transition-all duration-300 group transform hover:scale-105 hover:bg-white"
                         >
                           <img 
                             src={item.logo} 
                             alt={item.name} 
-                            className="w-5 h-5 mr-3 group-hover:scale-110 transition-transform duration-200"
+                            className="w-4 h-4 md:w-5 md:h-5 mr-2 md:mr-3 group-hover:scale-110 transition-transform duration-200"
                             onError={(e) => {
                               e.target.style.display = 'none';
                             }}
@@ -417,30 +433,30 @@ const Portfolio = () => {
       </section>
 
       {/* Education & Experience Section */}
-      <section id="education" className="py-20 px-6 bg-gray-50">
+      <section id="education" className="py-16 md:py-20 px-6 bg-gray-50">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Education & Experience</h2>
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Education & Experience</h2>
             <div className="w-24 h-1 bg-slate-700 mx-auto" />
           </div>
           
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 gap-6 md:gap-8">
             <div>
-              <h3 className="text-2xl font-semibold text-gray-900 mb-6 flex items-center">
-                <GraduationCap className="w-6 h-6 text-blue-700 mr-2" />
+              <h3 className="text-xl md:text-2xl font-semibold text-gray-900 mb-6 flex items-center">
+                <GraduationCap className="w-5 h-5 md:w-6 md:h-6 text-blue-700 mr-2" />
                 Education
               </h3>
-              <div className="space-y-6">
+              <div className="space-y-4 md:space-y-6">
                 {education.map((edu, index) => (
-                  <div key={index} className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-200">
-                    <h4 className="font-semibold text-gray-900 text-lg mb-2">{edu.degree}</h4>
-                    <p className="text-blue-700 font-medium mb-1">{edu.school}</p>
-                    <p className="text-gray-500 text-sm mb-3">{edu.period}</p>
-                    {edu.track && <p className="text-slate-600 text-sm mb-3">Track: {edu.track}</p>}
+                  <div key={index} className="bg-white rounded-xl p-4 md:p-6 shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-200">
+                    <h4 className="font-semibold text-gray-900 text-base md:text-lg mb-2">{edu.degree}</h4>
+                    <p className="text-blue-700 font-medium mb-1 text-sm md:text-base">{edu.school}</p>
+                    <p className="text-gray-500 text-xs md:text-sm mb-3">{edu.period}</p>
+                    {edu.track && <p className="text-slate-600 text-xs md:text-sm mb-3">Track: {edu.track}</p>}
                     {edu.achievements && (
                       <div className="mt-3">
                         {edu.achievements.map((achievement, achIndex) => (
-                          <div key={achIndex} className="flex items-center text-sm text-emerald-600 mb-1">
+                          <div key={achIndex} className="flex items-center text-xs md:text-sm text-emerald-600 mb-1">
                             <Star size={14} className="mr-2" />
                             {achievement}
                           </div>
@@ -453,25 +469,25 @@ const Portfolio = () => {
             </div>
 
             <div>
-              <h3 className="text-2xl font-semibold text-gray-900 mb-6 flex items-center">
-                <Briefcase className="w-6 h-6 text-slate-700 mr-2" />
+              <h3 className="text-xl md:text-2xl font-semibold text-gray-900 mb-6 flex items-center">
+                <Briefcase className="w-5 h-5 md:w-6 md:h-6 text-slate-700 mr-2" />
                 Experience
               </h3>
-              <div className="space-y-6">
+              <div className="space-y-4 md:space-y-6">
                 {experience.map((exp, index) => (
-                  <div key={index} className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-200">
-                    <h4 className="font-semibold text-gray-900 text-lg mb-2">{exp.title}</h4>
-                    <p className="text-slate-700 font-medium mb-1">{exp.company}</p>
-                    <div className="flex items-center text-gray-500 text-sm mb-3">
+                  <div key={index} className="bg-white rounded-xl p-4 md:p-6 shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-200">
+                    <h4 className="font-semibold text-gray-900 text-base md:text-lg mb-2">{exp.title}</h4>
+                    <p className="text-slate-700 font-medium mb-1 text-sm md:text-base">{exp.company}</p>
+                    <div className="flex flex-col md:flex-row md:items-center text-gray-500 text-xs md:text-sm mb-3">
                       <span>{exp.period}</span>
                       {exp.location && (
                         <>
-                          <span className="mx-2">•</span>
+                          <span className="hidden md:inline mx-2">•</span>
                           <span>{exp.location}</span>
                         </>
                       )}
                     </div>
-                    <p className="text-gray-600 leading-relaxed">{exp.description}</p>
+                    <p className="text-gray-600 leading-relaxed text-sm md:text-base">{exp.description}</p>
                   </div>
                 ))}
               </div>
@@ -481,17 +497,17 @@ const Portfolio = () => {
       </section>
 
       {/* Projects Section */}
-      <section id="projects" className="py-20 px-6 bg-white">
+      <section id="projects" className="py-16 md:py-20 px-6 bg-white">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Featured Projects</h2>
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Featured Projects</h2>
             <div className="w-24 h-1 bg-emerald-600 mx-auto mb-6" />
-            <p className="text-gray-600 max-w-2xl mx-auto">
+            <p className="text-gray-600 max-w-2xl mx-auto text-sm md:text-base">
               Here are some of my recent projects that showcase my skills in application development, UI/UX design, and problem-solving.
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {projects.map((project, index) => (
               <div
                 key={index}
@@ -501,7 +517,7 @@ const Portfolio = () => {
                   <img
                     src={project.image}
                     alt={project.title}
-                    className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-40 md:h-48 object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300" />
                   <div className="absolute top-4 right-4 bg-blue-700 text-white px-3 py-1 rounded-lg text-xs font-semibold">
@@ -509,9 +525,9 @@ const Portfolio = () => {
                   </div>
                 </div>
                 
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3 group-hover:text-blue-700 transition-colors duration-300">{project.title}</h3>
-                  <p className="text-gray-600 mb-4 leading-relaxed">{project.description}</p>
+                <div className="p-4 md:p-6">
+                  <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-3 group-hover:text-blue-700 transition-colors duration-300">{project.title}</h3>
+                  <p className="text-gray-600 mb-4 leading-relaxed text-sm md:text-base">{project.description}</p>
                   
                   <div className="flex flex-wrap gap-2 mb-6">
                     {project.tech.map((tech, techIndex) => (
@@ -531,44 +547,44 @@ const Portfolio = () => {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-20 px-6 bg-gray-50">
+      <section id="contact" className="py-16 md:py-20 px-6 bg-gray-50">
         <div className="max-w-4xl mx-auto text-center">
           <div>
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Let's Work Together</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Let's Work Together</h2>
             <div className="w-24 h-1 bg-slate-700 mx-auto mb-8" />
-            <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto">
+            <p className="text-lg md:text-xl text-gray-600 mb-8 md:mb-12 max-w-2xl mx-auto">
               I'm always excited to take on new challenges and collaborate on interesting projects. Let's create something amazing together!
             </p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8 mb-12">
-            <div className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-200">
-              <Mail className="w-8 h-8 text-blue-700 mx-auto mb-4" />
-              <h3 className="font-semibold text-gray-900 mb-2">Email</h3>
-              <a href="mailto:jadedanbantilo15@gmail.com" className="text-gray-600 hover:text-blue-700 transition-colors">
+          <div className="grid md:grid-cols-3 gap-6 md:gap-8 mb-8 md:mb-12">
+            <div className="bg-white rounded-xl p-4 md:p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-200">
+              <Mail className="w-6 h-6 md:w-8 md:h-8 text-blue-700 mx-auto mb-4" />
+              <h3 className="font-semibold text-gray-900 mb-2 text-sm md:text-base">Email</h3>
+              <a href="mailto:jadedanbantilo15@gmail.com" className="text-gray-600 hover:text-blue-700 transition-colors text-xs md:text-sm break-all">
                 jadedanbantilo15@gmail.com
               </a>
             </div>
             
-            <div className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-200">
-              <Phone className="w-8 h-8 text-slate-700 mx-auto mb-4" />
-              <h3 className="font-semibold text-gray-900 mb-2">Phone</h3>
-              <a href="tel:09053012761" className="text-gray-600 hover:text-slate-700 transition-colors">
+            <div className="bg-white rounded-xl p-4 md:p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-200">
+              <Phone className="w-6 h-6 md:w-8 md:h-8 text-slate-700 mx-auto mb-4" />
+              <h3 className="font-semibold text-gray-900 mb-2 text-sm md:text-base">Phone</h3>
+              <a href="tel:09053012761" className="text-gray-600 hover:text-slate-700 transition-colors text-xs md:text-sm">
                 09053012761
               </a>
             </div>
             
-            <div className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-200">
-              <MapPin className="w-8 h-8 text-emerald-600 mx-auto mb-4" />
-              <h3 className="font-semibold text-gray-900 mb-2">Location</h3>
-              <p className="text-gray-600">Taguig City, Philippines</p>
+            <div className="bg-white rounded-xl p-4 md:p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-200">
+              <MapPin className="w-6 h-6 md:w-8 md:h-8 text-emerald-600 mx-auto mb-4" />
+              <h3 className="font-semibold text-gray-900 mb-2 text-sm md:text-base">Location</h3>
+              <p className="text-gray-600 text-xs md:text-sm">Taguig City, Philippines</p>
             </div>
           </div>
           
           <div>
             <a 
               href="mailto:jadedanbantilo15@gmail.com"
-              className="inline-block px-8 py-4 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+              className="inline-block px-6 md:px-8 py-3 md:py-4 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl text-sm md:text-base"
             >
               Send Me a Message
             </a>
@@ -577,9 +593,9 @@ const Portfolio = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-slate-900 text-white py-8 px-6">
+      <footer className="bg-slate-900 text-white py-6 md:py-8 px-6">
         <div className="max-w-6xl mx-auto text-center">
-          <p className="text-gray-400">
+          <p className="text-gray-400 text-sm md:text-base">
             © 2024 Jade Daniele M. Bantilo. Built with React & Tailwind CSS.
           </p>
         </div>
