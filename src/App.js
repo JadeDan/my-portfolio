@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Github, Linkedin, Mail, ExternalLink, ChevronDown, Code, Palette, Smartphone, MapPin, Phone, Award, Briefcase, GraduationCap, Star } from 'lucide-react';
 import Profile from "./picture/Profile.png";
+import React from 'react';
+import './App.css';
+
 
 const Portfolio = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
