@@ -1,6 +1,26 @@
+
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Github, Linkedin, Mail, ExternalLink, ChevronDown, Code, Palette, Smartphone, MapPin, Phone, Award, Briefcase, GraduationCap, Star } from 'lucide-react';
+import { Menu, X, Github, Linkedin, Mail, ExternalLink, ChevronDown, Code, Palette, Smartphone, MapPin, Phone, Award, Briefcase, GraduationCap, Star, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
 import Profile from "./picture/Profile.png";
+
+import Chatbot1 from "./picture/chatbot/Ardi1.png";
+import Chatbot2 from "./picture/chatbot/Ardi2.png";
+import Chatbot3 from "./picture/chatbot/Ardi3.png";
+import Chatbot4 from "./picture/chatbot/Ardi4.png";
+import Chatbot5 from "./picture/chatbot/Ardi5.png";
+
+import BullyProof1 from "./picture/bullyproof/bullyproof-1.png";
+import BullyProof2 from "./picture/bullyproof/bullyproof-2.png";
+import BullyProof3 from "./picture/bullyproof/bullyproof-admin1.png";
+import BullyProof4 from "./picture/bullyproof/bullyproof-admin2.png";
+import BullyProof5 from "./picture/bullyproof/bullyproof-admin3.png";
+import BullyProof6 from "./picture/bullyproof/bullyproof-admin4.png";
+
+import ReallifeBGC1 from "./picture/reallife-bgc/reallife1.png";
+import ReallifeBGC2 from "./picture/reallife-bgc/reallife2.png";
+import ReallifeBGC3 from "./picture/reallife-bgc/reallife3.png";
+import ReallifeBGC4 from "./picture/reallife-bgc/reallife4.png";
+
 
 const Portfolio = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -8,6 +28,34 @@ const Portfolio = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // Project Images - Replace these with your actual imports
+  const projectImages = {
+    bullyproof: [
+      BullyProof1,
+      BullyProof2,
+      BullyProof3,
+      BullyProof4,
+      BullyProof5,
+      BullyProof6
+    ],
+    chatbot: [
+      Chatbot1,
+      Chatbot2,
+      Chatbot3,
+      Chatbot4,
+      Chatbot5
+    ],
+    reallifeBGC: [
+      ReallifeBGC1,
+      ReallifeBGC2,
+      ReallifeBGC3,
+      ReallifeBGC4
+    ]
+  };
 
   useEffect(() => {
     // Check if device is mobile/tablet
@@ -43,22 +91,61 @@ const Portfolio = () => {
       title: "BullyProof Mobile App",
       description: "Collaborated with a team to develop a mobile app for reporting cyberbullying incidents. Focused on creating a safe and user-friendly platform for students.",
       tech: ["Mobile Development", "UI/UX Design", "Team Collaboration"],
-      image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=500&h=300&fit=crop",
-      period: "May 2025"
+      image: projectImages.bullyproof[0],
+      period: "May 2025",
+      detailedDescription: "BullyProof is a comprehensive mobile application designed to combat cyberbullying in educational environments. Working with a dedicated team, we created a secure platform that allows students to report incidents anonymously while providing administrators with powerful tools to address and prevent bullying.",
+      features: [
+        "Anonymous reporting system with secure data handling",
+        "Real-time incident tracking and status updates",
+        "User-friendly interface designed for students of all ages",
+        "Administrative dashboard for school officials",
+        "Evidence collection tools including screenshots and text logs",
+        "Support resource integration and counseling referrals"
+      ],
+      gallery: projectImages.bullyproof,
+      role: "UI/UX Designer & Mobile Developer",
+      team: "4 developers, 2 designers, 1 project manager",
+      challenges: "Ensuring user anonymity while maintaining data integrity, creating an intuitive interface for sensitive reporting, and implementing robust security measures."
     },
     {
       title: "AI-Powered Chatbot UI/UX",
       description: "Designed the user interface and experience for an AI-powered chatbot for employees and clients. Focused on intuitive layouts and user flow to improve usability.",
       tech: ["UI/UX Design", "User Experience", "Interface Design"],
-      image: "https://images.unsplash.com/photo-1531746790731-6c087fecd65a?w=500&h=300&fit=crop",
-      period: "May 2025"
+      image: projectImages.chatbot[0],
+      period: "May 2025",
+      detailedDescription: "Developed a sophisticated chatbot interface that bridges the communication gap between AI technology and human users. The design emphasizes clarity, accessibility, and natural conversation flow to create an engaging user experience for both employees and clients.",
+      features: [
+        "Conversational UI with natural language processing",
+        "Multi-platform responsive design",
+        "Real-time typing indicators and status updates",
+        "File sharing and document management integration",
+        "Customizable chat themes and accessibility options",
+        "Analytics dashboard for conversation insights"
+      ],
+      gallery: projectImages.chatbot,
+      role: "Lead UI/UX Designer",
+      team: "2 designers, 3 developers, 1 AI specialist",
+      challenges: "Creating intuitive interactions for complex AI responses, designing for multiple user types with different needs, and ensuring the interface remains clean while handling rich media content."
     },
     {
       title: "Reallife BGC UI/UX",
       description: "Designed the UI/UX of the Real Life BGC scholarship website, creating a seamless application process for students and an efficient dashboard for administrators to manage applications.",
       tech: ["UI/UX Design", "User Experience", "Interface Design"],
-      image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=500&h=300&fit=crop",
-      period: "May 2023"
+      image: projectImages.reallifeBGC[0],
+      period: "May 2023",
+      detailedDescription: "Real Life BGC scholarship platform revolutionizes how students apply for educational funding. The project focused on eliminating barriers in the application process while providing administrators with comprehensive tools to evaluate and manage scholarship programs effectively.",
+      features: [
+        "Streamlined multi-step application process",
+        "Document upload and verification system",
+        "Administrative review and approval workflow",
+        "Student progress tracking and notifications",
+        "Scholarship matching algorithm based on eligibility",
+        "Comprehensive reporting and analytics tools"
+      ],
+      gallery: projectImages.reallifeBGC,
+      role: "UI/UX Designer",
+      team: "3 designers, 4 developers, 2 stakeholders",
+      challenges: "Simplifying complex scholarship requirements into user-friendly forms, ensuring accessibility for users with varying technical skills, and creating an efficient review system for administrators."
     }
   ];
 
@@ -151,6 +238,27 @@ const Portfolio = () => {
       transform: `translateX(${Math.max(Math.min(scrollY * intensity * direction, 100), -100)}px)`,
       opacity: Math.max(1 - scrollY * 0.0003, 0.7) // Much slower fade
     };
+  };
+
+  // Navigation functions for project gallery carousel
+  const nextImage = (gallery) => {
+    setCurrentImageIndex((prevIndex) => {
+      const maxIndex = gallery.length - 3;
+      return prevIndex >= maxIndex ? 0 : prevIndex + 1;
+    });
+  };
+
+  const previousImage = (gallery) => {
+    setCurrentImageIndex((prevIndex) => {
+      const maxIndex = gallery.length - 3;
+      return prevIndex === 0 ? maxIndex : prevIndex - 1;
+    });
+  };
+
+  // Reset image index when opening a new project
+  const handleProjectSelect = (project) => {
+    setSelectedProject(project);
+    setCurrentImageIndex(0);
   };
 
   return (
@@ -282,13 +390,14 @@ const Portfolio = () => {
                 <div className="absolute -top-4 -left-4 w-full h-full border-2 border-slate-300 rounded-2xl group-hover:translate-x-2 group-hover:translate-y-2 transition-transform duration-500" />
                 <div className="absolute -bottom-4 -right-4 w-full h-full bg-blue-700 opacity-10 rounded-2xl group-hover:-translate-x-1 group-hover:-translate-y-1 transition-transform duration-500" />
   
+                
                 {/* Main photo container */}
                 <div className="relative w-80 h-96 lg:w-96 lg:h-[480px] rounded-2xl overflow-hidden shadow-2xl group-hover:shadow-3xl transition-all duration-500 bg-white border border-gray-200">
                   <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-                    {/* Graduation photo */}
+                    {/* Profile photo */}
                     <img
                       src={Profile}
-                      alt="My Graduation Photo"
+                      alt="Jade Bantilo - Professional Portrait"
                       className="w-full h-full object-cover"
                     />
                   </div>
@@ -511,7 +620,8 @@ const Portfolio = () => {
             {projects.map((project, index) => (
               <div
                 key={index}
-                className="group bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 overflow-hidden border border-gray-200"
+                className="group bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 overflow-hidden border border-gray-200 cursor-pointer"
+                onClick={() => setSelectedProject(project)}
               >
                 <div className="relative overflow-hidden">
                   <img
@@ -520,6 +630,11 @@ const Portfolio = () => {
                     className="w-full h-40 md:h-48 object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300" />
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="bg-white bg-opacity-90 px-4 py-2 rounded-lg">
+                      <span className="text-gray-900 font-semibold text-sm">View Details</span>
+                    </div>
+                  </div>
                   <div className="absolute top-4 right-4 bg-blue-700 text-white px-3 py-1 rounded-lg text-xs font-semibold">
                     {project.period}
                   </div>
@@ -529,7 +644,7 @@ const Portfolio = () => {
                   <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-3 group-hover:text-blue-700 transition-colors duration-300">{project.title}</h3>
                   <p className="text-gray-600 mb-4 leading-relaxed text-sm md:text-base">{project.description}</p>
                   
-                  <div className="flex flex-wrap gap-2 mb-6">
+                  <div className="flex flex-wrap gap-2 mb-4">
                     {project.tech.map((tech, techIndex) => (
                       <span
                         key={techIndex}
@@ -539,12 +654,154 @@ const Portfolio = () => {
                       </span>
                     ))}
                   </div>
+                  
+                  <div className="flex items-center text-blue-700 text-sm font-medium group-hover:text-blue-800 transition-colors duration-300">
+                    <span>Click to view details</span>
+                    <ExternalLink size={16} className="ml-2" />
+                  </div>
                 </div>
               </div>
             ))}
           </div>
         </div>
       </section>
+
+      {/* Project Detail Modal */}
+      {selectedProject && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+              <h2 className="text-2xl font-bold text-gray-900">{selectedProject.title}</h2>
+              <button
+                onClick={() => setSelectedProject(null)}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+              >
+                <X size={24} />
+              </button>
+            </div>
+            
+            <div className="p-6">
+              {/* Project Overview */}
+              <div className="mb-8">
+                <div className="grid md:grid-cols-3 gap-6 mb-6">
+                  <div className="bg-gray-50 rounded-lg p-4">
+                    <h4 className="font-semibold text-gray-900 mb-2">Role</h4>
+                    <p className="text-gray-600 text-sm">{selectedProject.role}</p>
+                  </div>
+                  <div className="bg-gray-50 rounded-lg p-4">
+                    <h4 className="font-semibold text-gray-900 mb-2">Team</h4>
+                    <p className="text-gray-600 text-sm">{selectedProject.team}</p>
+                  </div>
+                  <div className="bg-gray-50 rounded-lg p-4">
+                    <h4 className="font-semibold text-gray-900 mb-2">Timeline</h4>
+                    <p className="text-gray-600 text-sm">{selectedProject.period}</p>
+                  </div>
+                </div>
+                
+                <div className="mb-6">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-3">Project Overview</h3>
+                  <p className="text-gray-600 leading-relaxed">{selectedProject.detailedDescription}</p>
+                </div>
+              </div>
+
+              {/* Project Gallery */}
+              <div className="mb-8">
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">Project Gallery</h3>
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {selectedProject.gallery.map((image, index) => (
+                    <div key={index} className="relative group overflow-hidden rounded-lg cursor-pointer">
+                      <img
+                        src={image}
+                        alt={`${selectedProject.title} screenshot ${index + 1}`}
+                        className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                        onClick={() => setSelectedImage({
+                          src: image,
+                          alt: `${selectedProject.title} screenshot ${index + 1}`,
+                          title: selectedProject.title
+                        })}
+                      />
+                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300" />
+                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <div className="bg-white bg-opacity-90 px-3 py-2 rounded-lg">
+                          <span className="text-gray-900 font-medium text-sm">View</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Key Features */}
+              <div className="mb-8">
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">Key Features</h3>
+                <div className="grid md:grid-cols-2 gap-3">
+                  {selectedProject.features.map((feature, index) => (
+                    <div key={index} className="flex items-start">
+                      <div className="w-2 h-2 bg-blue-700 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                      <p className="text-gray-600 text-sm">{feature}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Technologies Used */}
+              <div className="mb-8">
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">Technologies & Tools</h3>
+                <div className="flex flex-wrap gap-2">
+                  {selectedProject.tech.map((tech, index) => (
+                    <span
+                      key={index}
+                      className="px-4 py-2 bg-blue-50 text-blue-700 rounded-lg text-sm font-medium border border-blue-200"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Challenges & Solutions */}
+              <div className="mb-8">
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">Challenges & Solutions</h3>
+                <div className="bg-gray-50 rounded-lg p-6">
+                  <p className="text-gray-600 leading-relaxed">{selectedProject.challenges}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Image Lightbox Modal */}
+      {selectedImage && (
+        <div className="fixed inset-0 bg-black bg-opacity-80 z-60 flex items-center justify-center p-4">
+          <div className="relative max-w-5xl w-full max-h-[90vh] flex items-center justify-center">
+            <button
+              onClick={() => setSelectedImage(null)}
+              className="absolute top-4 right-4 bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-2 rounded-lg transition-all duration-200 z-10"
+            >
+              <X size={24} />
+            </button>
+            
+            <div className="bg-white rounded-lg overflow-hidden shadow-2xl max-h-full">
+              <img
+                src={selectedImage.src}
+                alt={selectedImage.alt}
+                className="max-w-full max-h-[80vh] object-contain"
+              />
+              <div className="p-4 bg-white">
+                <h3 className="font-semibold text-gray-900 text-lg">{selectedImage.title}</h3>
+                <p className="text-gray-600 text-sm">{selectedImage.alt}</p>
+              </div>
+            </div>
+            
+            {/* Click outside to close */}
+            <div 
+              className="absolute inset-0 -z-10"
+              onClick={() => setSelectedImage(null)}
+            />
+          </div>
+        </div>
+      )}
 
       {/* Contact Section */}
       <section id="contact" className="py-16 md:py-20 px-6 bg-gray-50">
@@ -596,7 +853,7 @@ const Portfolio = () => {
       <footer className="bg-slate-900 text-white py-6 md:py-8 px-6">
         <div className="max-w-6xl mx-auto text-center">
           <p className="text-gray-400 text-sm md:text-base">
-            © 2024 Jade Daniele M. Bantilo. Built with React & Tailwind CSS.
+            © 2025 Jade Daniele M. Bantilo. Built with React & Tailwind CSS.
           </p>
         </div>
       </footer>
