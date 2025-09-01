@@ -80,11 +80,91 @@ const Portfolio = () => {
     };
   }, []);
 
+  // Prevent body scrolling when modals are open
+  useEffect(() => {
+    if (selectedProject || selectedImage) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [selectedProject, selectedImage]);
+
   const scrollToSection = (sectionId) => {
     document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
     setIsMenuOpen(false);
     setActiveSection(sectionId);
   };
+
+  // Enhanced scroll handling for better snap behavior
+  useEffect(() => {
+    const handleWheel = (e) => {
+      // Don't prevent default if a modal is open
+      if (selectedProject || selectedImage) {
+        return;
+      }
+      
+      e.preventDefault();
+      
+      const sections = ['home', 'about', 'education', 'projects', 'contact', 'footer'];
+      const currentSection = sections.find(section => {
+        const element = section === 'footer' ? document.querySelector('footer') : document.getElementById(section);
+        if (!element) return false;
+        const rect = element.getBoundingClientRect();
+        return rect.top >= -100 && rect.top <= 100;
+      }) || 'home';
+      
+      const currentIndex = sections.indexOf(currentSection);
+      let nextIndex;
+      
+      if (e.deltaY > 0) {
+        // Scrolling down - circular navigation
+        if (currentIndex < sections.length - 1) {
+          nextIndex = currentIndex + 1;
+        } else {
+          // At footer, go back to home
+          nextIndex = 0;
+        }
+      } else if (e.deltaY < 0) {
+        // Scrolling up
+        if (currentIndex > 0) {
+          nextIndex = currentIndex - 1;
+        } else {
+          // At home, go to footer
+          nextIndex = sections.length - 1;
+        }
+      } else {
+        return;
+      }
+      
+      // Ensure we go directly to home when scrolling down from footer
+      if (currentSection === 'footer' && e.deltaY > 0) {
+        nextIndex = 0;
+      }
+      
+      const nextSection = sections[nextIndex];
+      if (nextSection === 'footer') {
+        document.querySelector('footer')?.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        document.getElementById(nextSection)?.scrollIntoView({ behavior: 'smooth' });
+      }
+      setActiveSection(nextSection);
+    };
+
+    // Only enable custom scroll handling on desktop
+    if (!isMobile) {
+      window.addEventListener('wheel', handleWheel, { passive: false });
+    }
+    
+    return () => {
+      if (!isMobile) {
+        window.removeEventListener('wheel', handleWheel);
+      }
+    };
+  }, [isMobile, selectedProject, selectedImage]);
 
   const projects = [
     {
@@ -262,7 +342,7 @@ const Portfolio = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 overflow-x-hidden">
+    <div className="min-h-screen bg-gray-50 overflow-x-hidden snap-y snap-mandatory">
       {/* Professional geometric background pattern */}
       <div className="fixed inset-0 pointer-events-none opacity-5">
         <div className="absolute inset-0" style={{
@@ -326,14 +406,32 @@ const Portfolio = () => {
           0%, 100% { transform: translateX(0px) translateY(0px); }
           50% { transform: translateX(20px) translateY(-10px); }
         }
+
+        /* Enhanced scroll snap behavior */
+        html {
+          scroll-behavior: smooth;
+        }
+        
+        body {
+          scroll-behavior: smooth;
+        }
+        
+        /* Ensure sections take full viewport height */
+        section.snap-start {
+          min-height: 100vh;
+          scroll-snap-align: start;
+        }
       `}</style>
 
       {/* Navigation */}
       <nav className={`fixed top-0 w-full z-50 transition-all duration-500 ${isScrolled ? 'bg-white shadow-lg border-b border-gray-200' : 'bg-transparent'}`}>
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-bold text-slate-800">
-              Jade Bantilo
+            <h1 
+              className="text-2xl font-bold text-slate-800 cursor-pointer hover:text-blue-700 transition-colors duration-300"
+              onClick={() => scrollToSection('home')}
+            >
+              JADE
             </h1>
             
             <div className="hidden md:flex space-x-12">
@@ -377,7 +475,7 @@ const Portfolio = () => {
       </nav>
 
       {/* Hero Section */}
-      <section id="home" className="min-h-screen flex items-center justify-center px-6 pt-20 pb-20 relative">
+      <section id="home" className="min-h-screen flex items-center justify-center px-6 pt-20 pb-20 relative snap-start">
         <div className="max-w-7xl mx-auto w-full">
           <div className="grid lg:grid-cols-2 gap-16 lg:gap-20 items-center min-h-[80vh]">
             {/* Photo Section - Left Side */}
@@ -485,7 +583,7 @@ const Portfolio = () => {
       </section>
 
       {/* About Section */}
-      <section id="about" className="py-16 md:py-20 px-6 bg-white">
+      <section id="about" className="py-20 md:py-32 px-6 bg-white snap-start">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12 md:mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">About Me</h2>
@@ -542,9 +640,9 @@ const Portfolio = () => {
       </section>
 
       {/* Education & Experience Section */}
-      <section id="education" className="py-16 md:py-20 px-6 bg-gray-50">
+      <section id="education" className="pt-16 pb-32 md:pt-20 md:pb-48 px-6 bg-gray-50 snap-start">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12 md:mb-16">
+          <div className="text-center mb-8 md:mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Education & Experience</h2>
             <div className="w-24 h-1 bg-slate-700 mx-auto" />
           </div>
@@ -606,7 +704,7 @@ const Portfolio = () => {
       </section>
 
       {/* Projects Section */}
-      <section id="projects" className="py-16 md:py-20 px-6 bg-white">
+      <section id="projects" className="py-20 md:py-32 px-6 bg-white snap-start">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12 md:mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Featured Projects</h2>
@@ -627,17 +725,35 @@ const Portfolio = () => {
                   <img
                     src={project.image}
                     alt={project.title}
-                    className="w-full h-40 md:h-48 object-cover group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-40 md:h-48 object-cover group-hover:scale-105 transition-transform duration-500 cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedImage({
+                        src: project.image,
+                        alt: project.title,
+                        title: project.title
+                      });
+                    }}
                   />
                   <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300" />
                   <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="bg-white bg-opacity-90 px-4 py-2 rounded-lg">
-                      <span className="text-gray-900 font-semibold text-sm">View Details</span>
+                    <div className="bg-white bg-opacity-90 px-4 py-2 rounded-lg cursor-pointer"
+                         onClick={(e) => {
+                           e.stopPropagation();
+                           setSelectedImage({
+                             src: project.image,
+                             alt: project.title,
+                             title: project.title
+                           });
+                         }}
+                    >
+                      <span className="text-gray-900 font-semibold text-sm">View</span>
                     </div>
                   </div>
                   <div className="absolute top-4 right-4 bg-blue-700 text-white px-3 py-1 rounded-lg text-xs font-semibold">
                     {project.period}
                   </div>
+
                 </div>
                 
                 <div className="p-4 md:p-6">
@@ -668,8 +784,8 @@ const Portfolio = () => {
 
       {/* Project Detail Modal */}
       {selectedProject && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4" onClick={() => setSelectedProject(null)}>
+          <div className="bg-white rounded-2xl max-w-6xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
               <h2 className="text-2xl font-bold text-gray-900">{selectedProject.title}</h2>
               <button
@@ -713,7 +829,7 @@ const Portfolio = () => {
                       <img
                         src={image}
                         alt={`${selectedProject.title} screenshot ${index + 1}`}
-                        className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                        className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300 cursor-pointer"
                         onClick={() => setSelectedImage({
                           src: image,
                           alt: `${selectedProject.title} screenshot ${index + 1}`,
@@ -722,10 +838,17 @@ const Portfolio = () => {
                       />
                       <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300" />
                       <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <div className="bg-white bg-opacity-90 px-3 py-2 rounded-lg">
+                        <div className="bg-white bg-opacity-90 px-3 py-2 rounded-lg cursor-pointer"
+                             onClick={() => setSelectedImage({
+                               src: image,
+                               alt: `${selectedProject.title} screenshot ${index + 1}`,
+                               title: selectedProject.title
+                             })}
+                        >
                           <span className="text-gray-900 font-medium text-sm">View</span>
                         </div>
                       </div>
+
                     </div>
                   ))}
                 </div>
@@ -773,26 +896,59 @@ const Portfolio = () => {
 
       {/* Image Lightbox Modal */}
       {selectedImage && (
-        <div className="fixed inset-0 bg-black bg-opacity-80 z-60 flex items-center justify-center p-4">
-          <div className="relative max-w-5xl w-full max-h-[90vh] flex items-center justify-center">
-            <button
+        <div className="fixed inset-0 bg-black bg-opacity-80 z-[9999] flex items-center justify-center p-4" onClick={() => setSelectedImage(null)}>
+          <div className="relative max-w-5xl w-full max-h-[90vh] flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+                        <button
               onClick={() => setSelectedImage(null)}
-              className="absolute top-4 right-4 bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-2 rounded-lg transition-all duration-200 z-10"
+              className="absolute top-6 right-6 bg-black bg-opacity-40 hover:bg-opacity-60 text-white p-4 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl z-10"
             >
-              <X size={24} />
+              <X size={20} />
             </button>
             
             <div className="bg-white rounded-lg overflow-hidden shadow-2xl max-h-full">
               <img
                 src={selectedImage.src}
                 alt={selectedImage.alt}
-                className="max-w-full max-h-[80vh] object-contain"
+                className="max-w-full max-h-[90vh] object-contain"
               />
-              <div className="p-4 bg-white">
-                <h3 className="font-semibold text-gray-900 text-lg">{selectedImage.title}</h3>
-                <p className="text-gray-600 text-sm">{selectedImage.alt}</p>
-              </div>
             </div>
+            
+            {/* Navigation Arrows */}
+            {selectedProject && selectedProject.gallery && selectedProject.gallery.length > 1 && (
+              <>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    const currentIndex = selectedProject.gallery.findIndex(img => img === selectedImage.src);
+                    const prevIndex = currentIndex > 0 ? currentIndex - 1 : selectedProject.gallery.length - 1;
+                    setSelectedImage({
+                      src: selectedProject.gallery[prevIndex],
+                      alt: `${selectedProject.title} screenshot ${prevIndex + 1}`,
+                      title: selectedProject.title
+                    });
+                  }}
+                  className="absolute left-6 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-40 hover:bg-opacity-60 text-white p-4 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl z-10"
+                >
+                  <ChevronLeft size={20} />
+                </button>
+                
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    const currentIndex = selectedProject.gallery.findIndex(img => img === selectedImage.src);
+                    const nextIndex = currentIndex < selectedProject.gallery.length - 1 ? currentIndex + 1 : 0;
+                    setSelectedImage({
+                      src: selectedProject.gallery[nextIndex],
+                      alt: `${selectedProject.title} screenshot ${nextIndex + 1}`,
+                      title: selectedProject.title
+                    });
+                  }}
+                  className="absolute right-6 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-40 hover:bg-opacity-60 text-white p-4 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl z-10"
+                >
+                  <ChevronRight size={20} />
+                </button>
+              </>
+            )}
             
             {/* Click outside to close */}
             <div 
@@ -804,7 +960,7 @@ const Portfolio = () => {
       )}
 
       {/* Contact Section */}
-      <section id="contact" className="py-16 md:py-20 px-6 bg-gray-50">
+      <section id="contact" className="py-20 md:py-32 px-6 bg-gray-50 snap-start">
         <div className="max-w-4xl mx-auto text-center">
           <div>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Let's Work Together</h2>
@@ -814,7 +970,7 @@ const Portfolio = () => {
             </p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-6 md:gap-8 mb-8 md:mb-12">
+          <div className="grid md:grid-cols-3 gap-6 md:gap-8 mb-6 md:mb-8">
             <div className="bg-white rounded-xl p-4 md:p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-200">
               <Mail className="w-6 h-6 md:w-8 md:h-8 text-blue-700 mx-auto mb-4" />
               <h3 className="font-semibold text-gray-900 mb-2 text-sm md:text-base">Email</h3>
@@ -850,11 +1006,85 @@ const Portfolio = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-slate-900 text-white py-6 md:py-8 px-6">
-        <div className="max-w-6xl mx-auto text-center">
-          <p className="text-gray-400 text-sm md:text-base">
-            © 2025 Jade Daniele M. Bantilo. Built with React & Tailwind CSS.
-          </p>
+      <footer className="bg-slate-900 text-white py-12 md:py-16 px-6 snap-start">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-8 md:gap-12 mb-8">
+            {/* Personal Info */}
+            <div className="text-center md:text-left">
+              <h3 className="text-xl font-bold text-white mb-4">Jade Daniele M. Bantilo</h3>
+              <p className="text-gray-400 mb-4 leading-relaxed">
+                A passionate Computer Science graduate specializing in Application Development and UI/UX Design.
+              </p>
+              <div className="flex justify-center md:justify-start space-x-4">
+                <a 
+                  href="mailto:jadedanbantilo15@gmail.com" 
+                  className="text-gray-400 hover:text-blue-400 transition-colors duration-300"
+                  title="Email"
+                >
+                  <Mail size={20} />
+                </a>
+                <a 
+                  href="tel:09053012761" 
+                  className="text-gray-400 hover:text-green-400 transition-colors duration-300"
+                  title="Phone"
+                >
+                  <Phone size={20} />
+                </a>
+                <a 
+                  href="#" 
+                  className="text-gray-400 hover:text-blue-600 transition-colors duration-300"
+                  title="LinkedIn"
+                >
+                  <Linkedin size={20} />
+                </a>
+                <a 
+                  href="#" 
+                  className="text-gray-400 hover:text-gray-300 transition-colors duration-300"
+                  title="GitHub"
+                >
+                  <Github size={20} />
+                </a>
+              </div>
+            </div>
+
+            {/* Quick Links */}
+            <div className="text-center md:text-left">
+              <h3 className="text-lg font-semibold text-white mb-4">Quick Links</h3>
+              <ul className="space-y-2">
+                {['home', 'about', 'education', 'projects', 'contact'].map((item) => (
+                  <li key={item}>
+                    <button
+                      onClick={() => scrollToSection(item)}
+                      className="text-gray-400 hover:text-white transition-colors duration-300 capitalize"
+                    >
+                      {item}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Skills Summary */}
+            <div className="text-center md:text-left">
+              <h3 className="text-lg font-semibold text-white mb-4">Skills</h3>
+              <div className="space-y-2">
+                <p className="text-gray-400 text-sm">Frontend Development</p>
+                <p className="text-gray-400 text-sm">UI/UX Design</p>
+                <p className="text-gray-400 text-sm">Mobile Development</p>
+                <p className="text-gray-400 text-sm">Problem Solving</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Section */}
+          <div className="border-t border-gray-800 pt-8 text-center">
+            <p className="text-gray-400 text-sm md:text-base mb-2">
+              © 2025 Jade Daniele M. Bantilo. All rights reserved.
+            </p>
+            <p className="text-gray-500 text-xs md:text-sm">
+              Built with React & Tailwind CSS • Designed with ❤️
+            </p>
+          </div>
         </div>
       </footer>
     </div>
