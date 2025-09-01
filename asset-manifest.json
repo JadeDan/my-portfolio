@@ -1,14 +1,29 @@
 {
   "files": {
-    "main.css": "/my-portfolio/static/css/main.874837bc.css",
-    "main.js": "/my-portfolio/static/js/main.3424cebc.js",
+    "main.css": "/my-portfolio/static/css/main.0691fb04.css",
+    "main.js": "/my-portfolio/static/js/main.90226a82.js",
     "static/media/Profile.png": "/my-portfolio/static/media/Profile.4b8d1ef568f47239246b.png",
+    "static/media/reallife1.png": "/my-portfolio/static/media/reallife1.0453b85f35fe30b2bb9d.png",
+    "static/media/bullyproof-1.png": "/my-portfolio/static/media/bullyproof-1.2d5cea15a085003b4d8c.png",
+    "static/media/bullyproof-admin2.png": "/my-portfolio/static/media/bullyproof-admin2.13e3af84a864e8b9cf1f.png",
+    "static/media/bullyproof-2.png": "/my-portfolio/static/media/bullyproof-2.963487a2406cd018e0f5.png",
+    "static/media/bullyproof-admin4.png": "/my-portfolio/static/media/bullyproof-admin4.578cfae2f145391d8b06.png",
+    "static/media/bullyproof-admin3.png": "/my-portfolio/static/media/bullyproof-admin3.a88613f6a80bc08b0316.png",
+    "static/media/bullyproof-admin1.png": "/my-portfolio/static/media/bullyproof-admin1.eadcb7754b0a13ae5193.png",
+    "static/media/Ardi3.png": "/my-portfolio/static/media/Ardi3.4cce36758d1f44504e49.png",
+    "static/media/Ardi4.png": "/my-portfolio/static/media/Ardi4.a1f9008d9ab2161b2669.png",
+    "static/media/reallife2.png": "/my-portfolio/static/media/reallife2.9b8f7f7a52b32873b2f3.png",
+    "static/media/Ardi1.png": "/my-portfolio/static/media/Ardi1.bfa08edaedc25d3b3752.png",
+    "static/media/Ardi5.png": "/my-portfolio/static/media/Ardi5.bfa08edaedc25d3b3752.png",
+    "static/media/Ardi2.png": "/my-portfolio/static/media/Ardi2.9d3c7327ea3772aaca3b.png",
+    "static/media/reallife4.png": "/my-portfolio/static/media/reallife4.bbbb12fee0b840dc8482.png",
+    "static/media/reallife3.png": "/my-portfolio/static/media/reallife3.c35277d505e9af03bdc9.png",
     "index.html": "/my-portfolio/index.html",
-    "main.874837bc.css.map": "/my-portfolio/static/css/main.874837bc.css.map",
-    "main.3424cebc.js.map": "/my-portfolio/static/js/main.3424cebc.js.map"
+    "main.0691fb04.css.map": "/my-portfolio/static/css/main.0691fb04.css.map",
+    "main.90226a82.js.map": "/my-portfolio/static/js/main.90226a82.js.map"
   },
   "entrypoints": [
-    "static/css/main.874837bc.css",
-    "static/js/main.3424cebc.js"
+    "static/css/main.0691fb04.css",
+    "static/js/main.90226a82.js"
   ]
 }
