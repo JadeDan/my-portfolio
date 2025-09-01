@@ -31,6 +31,8 @@ const Portfolio = () => {
   const [selectedProject, setSelectedProject] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [imageScale, setImageScale] = useState(1);
+  const [imagePosition, setImagePosition] = useState({ x: 0, y: 0 });
 
   // Project Images - Replace these with your actual imports
   const projectImages = {
@@ -92,6 +94,56 @@ const Portfolio = () => {
       document.body.style.overflow = 'unset';
     };
   }, [selectedProject, selectedImage]);
+
+  // Reset image zoom when modal opens/closes
+  useEffect(() => {
+    if (selectedImage) {
+      setImageScale(1);
+      setImagePosition({ x: 0, y: 0 });
+    }
+  }, [selectedImage]);
+
+  // Pinch to zoom functionality for mobile/tablet
+  const handleTouchStart = (e) => {
+    if (e.touches.length === 2) {
+      const touch1 = e.touches[0];
+      const touch2 = e.touches[1];
+      const distance = Math.sqrt(
+        Math.pow(touch2.clientX - touch1.clientX, 2) +
+        Math.pow(touch2.clientY - touch1.clientY, 2)
+      );
+      e.target.dataset.initialDistance = distance;
+      e.target.dataset.initialScale = imageScale;
+    }
+  };
+
+  const handleTouchMove = (e) => {
+    if (e.touches.length === 2) {
+      e.preventDefault();
+      const touch1 = e.touches[0];
+      const touch2 = e.touches[1];
+      const distance = Math.sqrt(
+        Math.pow(touch2.clientX - touch1.clientX, 2) +
+        Math.pow(touch2.clientY - touch1.clientY, 2)
+      );
+      
+      const initialDistance = parseFloat(e.target.dataset.initialDistance);
+      const initialScale = parseFloat(e.target.dataset.initialScale);
+      
+      if (initialDistance > 0) {
+        const scale = (distance / initialDistance) * initialScale;
+        const clampedScale = Math.min(Math.max(scale, 0.5), 3);
+        setImageScale(clampedScale);
+      }
+    }
+  };
+
+  const handleTouchEnd = (e) => {
+    if (imageScale < 1) {
+      setImageScale(1);
+      setImagePosition({ x: 0, y: 0 });
+    }
+  };
 
   const scrollToSection = (sectionId) => {
     document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
@@ -896,20 +948,28 @@ const Portfolio = () => {
 
       {/* Image Lightbox Modal */}
       {selectedImage && (
-        <div className="fixed inset-0 bg-black bg-opacity-80 z-[9999] flex items-center justify-center p-4" onClick={() => setSelectedImage(null)}>
+        <div className="fixed inset-0 bg-black bg-opacity-80 z-[9999] flex items-center justify-center p-2 md:p-4" onClick={() => setSelectedImage(null)}>
           <div className="relative max-w-5xl w-full max-h-[90vh] flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
                         <button
               onClick={() => setSelectedImage(null)}
-              className="absolute top-6 right-6 bg-black bg-opacity-40 hover:bg-opacity-60 text-white p-4 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl z-10"
+              className="absolute top-4 right-4 md:top-6 md:right-6 bg-black bg-opacity-40 hover:bg-opacity-60 text-white p-2 md:p-4 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl z-10"
             >
-              <X size={20} />
+              <X size={16} className="md:w-5 md:h-5" />
             </button>
             
             <div className="bg-white rounded-lg overflow-hidden shadow-2xl max-h-full">
               <img
                 src={selectedImage.src}
                 alt={selectedImage.alt}
-                className="max-w-full max-h-[90vh] object-contain"
+                className="max-w-full max-h-[90vh] object-contain touch-manipulation"
+                style={{
+                  transform: `scale(${imageScale}) translate(${imagePosition.x}px, ${imagePosition.y}px)`,
+                  transition: imageScale === 1 ? 'transform 0.3s ease-out' : 'none',
+                  transformOrigin: 'center center'
+                }}
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
               />
             </div>
             
@@ -927,9 +987,9 @@ const Portfolio = () => {
                       title: selectedProject.title
                     });
                   }}
-                  className="absolute left-6 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-40 hover:bg-opacity-60 text-white p-4 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl z-10"
+                  className="absolute left-2 md:left-6 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-40 hover:bg-opacity-60 text-white p-2 md:p-4 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl z-10"
                 >
-                  <ChevronLeft size={20} />
+                  <ChevronLeft size={16} className="md:w-5 md:h-5" />
                 </button>
                 
                 <button
@@ -943,9 +1003,9 @@ const Portfolio = () => {
                       title: selectedProject.title
                     });
                   }}
-                  className="absolute right-6 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-40 hover:bg-opacity-60 text-white p-4 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl z-10"
+                  className="absolute right-2 md:right-6 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-40 hover:bg-opacity-60 text-white p-2 md:p-4 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl z-10"
                 >
-                  <ChevronRight size={20} />
+                  <ChevronRight size={16} className="md:w-5 md:h-5" />
                 </button>
               </>
             )}
