@@ -627,7 +627,7 @@ const Portfolio = () => {
                 </div>
                 
                 <p className="text-base md:text-lg text-gray-600 mb-10 leading-relaxed max-w-2xl mx-auto lg:mx-0">
-                  Passionate about creating beautiful, functional digital experiences and solving real-world problems through technology. Dean's Lister with hands-on experience in mobile app development and user-centered design.
+                  Passionate about designing and developing functional, user-friendly digital experiences with a focus on solving real-world problems through technology. Skilled in software development and user-centered design.
                 </p>
               </div>
               
@@ -1176,10 +1176,11 @@ const Portfolio = () => {
             <div className="text-center md:text-left">
               <h3 className="text-lg font-semibold text-white mb-4">Skills</h3>
               <div className="space-y-2">
-                <p className="text-gray-400 text-sm">Frontend Development</p>
+                <p className="text-gray-400 text-sm">Front-End Development</p>
                 <p className="text-gray-400 text-sm">UI/UX Design</p>
-                <p className="text-gray-400 text-sm">Mobile Development</p>
-                <p className="text-gray-400 text-sm">Problem Solving</p>
+                <p className="text-gray-400 text-sm">Web & Mobile Application Development</p>
+                <p className="text-gray-400 text-sm">Problem-Solving</p>
+                <p className="text-gray-400 text-sm">Critical Thinking</p>
               </div>
             </div>
           </div>
