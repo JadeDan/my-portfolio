@@ -145,6 +145,54 @@ const Portfolio = () => {
     }
   };
 
+  // Keyboard navigation for image lightbox
+  useEffect(() => {
+    if (!selectedImage) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setSelectedImage(null);
+        return;
+      }
+      if (!selectedProject || !selectedProject.gallery || selectedProject.gallery.length <= 1) return;
+      if (e.key === 'ArrowRight' || e.key === 'Right') {
+        const currentIndex = selectedProject.gallery.findIndex((img) => img === selectedImage.src);
+        const nextIndex = currentIndex < selectedProject.gallery.length - 1 ? currentIndex + 1 : 0;
+        setSelectedImage({
+          src: selectedProject.gallery[nextIndex],
+          alt: `${selectedProject.title} screenshot ${nextIndex + 1}`,
+          title: selectedProject.title
+        });
+      } else if (e.key === 'ArrowLeft' || e.key === 'Left') {
+        const currentIndex = selectedProject.gallery.findIndex((img) => img === selectedImage.src);
+        const prevIndex = currentIndex > 0 ? currentIndex - 1 : selectedProject.gallery.length - 1;
+        setSelectedImage({
+          src: selectedProject.gallery[prevIndex],
+          alt: `${selectedProject.title} screenshot ${prevIndex + 1}`,
+          title: selectedProject.title
+        });
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedImage, selectedProject]);
+
+  // Keyboard escape to close project detail modal
+  // If an image is open, ESC closes the image first, then the project on next ESC
+  useEffect(() => {
+    if (!selectedProject) return;
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        if (selectedImage) {
+          setSelectedImage(null);
+          return;
+        }
+        setSelectedProject(null);
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [selectedProject, selectedImage]);
+
   const scrollToSection = (sectionId) => {
     document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
     setIsMenuOpen(false);
@@ -221,11 +269,11 @@ const Portfolio = () => {
   const projects = [
     {
       title: "BullyProof Mobile App",
-      description: "Collaborated with a team to develop a mobile app for reporting cyberbullying incidents. Focused on creating a safe and user-friendly platform for students.",
+      description: "Collaborated with a team to develop a mobile app for reporting cyberbullying incidents and designed the admin-side web dashboard for school staff. Focused on creating a safe and user-friendly platform for students and efficient tools for administrators.",
       tech: ["Mobile Development", "UI/UX Design", "Team Collaboration"],
       image: projectImages.bullyproof[0],
       period: "May 2025",
-      detailedDescription: "BullyProof is a comprehensive mobile application designed to combat cyberbullying in educational environments. Working with a dedicated team, we created a secure platform that allows students to report incidents anonymously while providing administrators with powerful tools to address and prevent bullying.",
+      detailedDescription: "BullyProof is a comprehensive mobile application designed to combat cyberbullying in educational environments. Working with a dedicated team, we created a secure platform that allows students to report incidents anonymously while providing administrators with powerful tools to address and prevent bullying. In addition to the mobile app, I also designed the admin-side web dashboard/portal used by school staff to review, triage, and manage reports in real time.",
       features: [
         "Anonymous reporting system with secure data handling",
         "Real-time incident tracking and status updates",
@@ -235,8 +283,8 @@ const Portfolio = () => {
         "Support resource integration and counseling referrals"
       ],
       gallery: projectImages.bullyproof,
-      role: "UI/UX Designer & Mobile Developer",
-      team: "4 developers, 2 designers, 1 project manager",
+      role: "UI/UX Designer",
+      team: "2 Developers, 1 Designer, 1 Researcher",
       challenges: "Ensuring user anonymity while maintaining data integrity, creating an intuitive interface for sensitive reporting, and implementing robust security measures."
     },
     {
@@ -256,7 +304,7 @@ const Portfolio = () => {
       ],
       gallery: projectImages.chatbot,
       role: "Lead UI/UX Designer",
-      team: "2 designers, 3 developers, 1 AI specialist",
+      team: "2 Developers, 1 Designer, 1 Researcher",
       challenges: "Creating intuitive interactions for complex AI responses, designing for multiple user types with different needs, and ensuring the interface remains clean while handling rich media content."
     },
     {
@@ -276,7 +324,7 @@ const Portfolio = () => {
       ],
       gallery: projectImages.reallifeBGC,
       role: "UI/UX Designer",
-      team: "3 designers, 4 developers, 2 stakeholders",
+      team: "2 Developers, 1 Designer, 1 Researcher",
       challenges: "Simplifying complex scholarship requirements into user-friendly forms, ensuring accessibility for users with varying technical skills, and creating an efficient review system for administrators."
     }
   ];
@@ -1142,7 +1190,7 @@ const Portfolio = () => {
               © 2025 Jade Daniele M. Bantilo. All rights reserved.
             </p>
             <p className="text-gray-500 text-xs md:text-sm">
-              Built with React & Tailwind CSS • Designed with ❤️
+              Built with React & Tailwind CSS
             </p>
           </div>
         </div>
